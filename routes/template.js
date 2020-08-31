@@ -37,15 +37,16 @@ router.get("/getByUser", async (req, res, next) => {
     where: { makerId: makerId },
     attributes: ["fullData", "id"],
   })
-    .then((tems) =>
+    .then((tems) => {
+      const resultTems = tems.map((tem) => {
+        tem.fullData = tem.fullData.toString("utf8");
+      });
       res.json({
         code: 0,
         len: tems.length,
-        resData: tems.map((tem) => {
-          tem.fullData = tem.fullData.toString("utf8");
-        }),
-      })
-    )
+        resData: resultTems,
+      });
+    })
     .catch((err) => {
       console.log(err);
       res.json({ code: -1 });
