@@ -84,7 +84,7 @@ router.post("/regist", (req, res, next) => {
     cntWatch: 0,
     category: category,
   })
-    .then(res.send("생성되었습니다."))
+    .then(res.json({ code: 0 }))
     .catch((err) => {
       console.log(err);
     });
