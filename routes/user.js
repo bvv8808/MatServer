@@ -99,6 +99,7 @@ router.post("/price", async (req, res, next) => {
   buyUserPoint = 0;
   sellUserPoint = 0;
   makerId = 0;
+  let cntBuy = 0;
 
   await User.findOne({ where: { id: buyUserId }, attributes: ["point"] })
     .then((data) => {
@@ -112,9 +113,10 @@ router.post("/price", async (req, res, next) => {
 
   await UserTemplate.findOne({
     where: { id: sellTemId },
-    attributes: ["price", "makerId"],
+    attributes: ["price", "makerId", "cntBuy"],
   })
     .then((data) => {
+      cntBuy = data.cntBuy;
       temprice = data.price;
       makerId = data.makerId;
     })
@@ -139,6 +141,10 @@ router.post("/price", async (req, res, next) => {
     resultMakerpoint = sellUserPoint + temprice;
     await User.update({ point: resultUserpoint }, { where: { id: buyUserId } });
     await User.update({ point: resultMakerpoint }, { where: { id: makerId } });
+    await UserTemplate.update(
+      { cntBuy: cntBuy + 1 },
+      { where: { id: sellTemId } }
+    );
     res.send({
       code: 0,
       newPoint: resultUserpoint,
