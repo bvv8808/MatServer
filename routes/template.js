@@ -37,6 +37,7 @@ router.get("/getByUser", async (req, res, next) => {
     .then((tems) =>
       res.json({
         code: 0,
+        len: tems.length,
         resData: tems.map((tem) => {
           tem.fullData = tem.fullData.toString("utf8");
         }),
