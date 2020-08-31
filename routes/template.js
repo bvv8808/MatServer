@@ -33,7 +33,10 @@ router.get("/getOne", async (req, res, next) => {
 
 router.get("/getByUser", async (req, res, next) => {
   const makerId = req.query.makerId;
-  Template.findAll({ where: { id: makerId }, attributes: ["fullData", "id"] })
+  Template.findAll({
+    where: { makerId: makerId },
+    attributes: ["fullData", "id"],
+  })
     .then((tems) =>
       res.json({
         code: 0,
