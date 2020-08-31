@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User, Template } = require("../models");
+const { User, UserTemplate } = require("../models");
 const jwt = require("jsonwebtoken");
 const { verifyToken } = require("./middlewares");
 const bcrypt = require("bcrypt");
@@ -110,7 +110,7 @@ router.post("/price", async (req, res, next) => {
       res.send({ code: -1, msg: "userid error" });
     });
 
-  await Template.findOne({
+  await UserTemplate.findOne({
     where: { id: sellTemId },
     attributes: ["price", "makerId"],
   })
