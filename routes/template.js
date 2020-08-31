@@ -42,7 +42,7 @@ router.get("/getByUser", async (req, res, next) => {
         tem.fullData = tem.fullData.toString("utf8");
         return tem;
       });
-      console.log("## tems ## ", resultTems);
+
       res.json({
         code: 0,
         len: tems.length,
