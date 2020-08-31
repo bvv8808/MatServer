@@ -139,7 +139,11 @@ router.post("/price", async (req, res, next) => {
     resultMakerpoint = sellUserPoint + temprice;
     await User.update({ point: resultUserpoint }, { where: { id: buyUserId } });
     await User.update({ point: resultMakerpoint }, { where: { id: makerId } });
-    res.send({ code: 0, msg: "결산이 대충 된것만 같습니다." });
+    res.send({
+      code: 0,
+      newPoint: resultUserpoint,
+      msg: "결산이 대충 된것만 같습니다.",
+    });
   } else {
     res.send({ code: -1, msg: "point가 부족합니다." });
   }
