@@ -34,7 +34,14 @@ router.get("/getOne", async (req, res, next) => {
 router.get("/getByUser", async (req, res, next) => {
   const makerId = req.query.makerId;
   Template.findAll({ where: { id: makerId }, attributes: ["fullData", "id"] })
-    .then((tems) => res.json({ code: 0, resData: tems }))
+    .then((tems) =>
+      res.json({
+        code: 0,
+        resData: tems.map((tem) => {
+          tem.fullData = tem.fullData.toString("utf8");
+        }),
+      })
+    )
     .catch((err) => {
       console.log(err);
       res.json({ code: -1 });
