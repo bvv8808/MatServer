@@ -1,9 +1,9 @@
 const express = require("express");
 const { PurchaseLog } = require("../models");
 const router = express.Router();
-const Pin = require("../models").Pin;
-const User = require("../models").User;
 const Template = require("../models").UserTemplate;
+const { User, Pin, Sequelize } = require("../models");
+const Op = Sequelize.Op;
 
 router.get("/", async (req, res, next) => {
   //select * from usertemplates  =>result=objcet
@@ -244,7 +244,23 @@ router.get("/purchaseLog", async (req, res, next) => {
     attributes: ["temId"],
   })
     .then((logs) => {
-      res.json({ code: 0, temIds: logs.map((log) => log.dataValues.temId) });
+      return logs.map((log) => log.dataValues.temId);
+    })
+    .then((temIds) => {
+      return Template.findAll({
+        where: {
+          id: {
+            [Op.in]: temIds,
+          },
+        },
+      });
+    })
+    .then((tems) => {
+      const resultTems = tems.map((tem) => {
+        tem.fullData = tem.fullData.toString("utf8");
+        return tem;
+      });
+      res.json({ code: 0, tems: resultTems }); /////////////////
     })
     .catch((err) => {
       console.log(err);
