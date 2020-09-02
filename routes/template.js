@@ -237,4 +237,19 @@ router.post("/purchase", async (req, res, next) => {
     });
 });
 
+router.get("/purchaseLog", async (req, res, next) => {
+  const { buyerId } = req.query;
+  PurchaseLog.findAll({
+    where: { buyerId: Number(buyerId) },
+    attributes: ["temId"],
+  })
+    .then((logs) => {
+      res.json({ code: 0, temIds: logs.map((log) => log.dataValues.temId) });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.json({ code: -1 });
+    });
+});
+
 module.exports = router;
