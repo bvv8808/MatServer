@@ -1,4 +1,5 @@
 const express = require("express");
+const { PurchaseLog } = require("../models");
 const router = express.Router();
 const Pin = require("../models").Pin;
 const User = require("../models").User;
@@ -195,4 +196,45 @@ router.get("/resData", async (req, res, next) => {
     });
   res.send(result);
 });
+
+router.post("/purchase", async (req, res, next) => {
+  const { buyerId, temId } = req.body;
+
+  let resData = {};
+  const findTargetTem = () => {
+    return Template.findOne({
+      where: { id: temId },
+      attributes: ["id", "makerId", "price", "cntBuy"],
+    });
+  };
+
+  const purchase = async (tem) => {
+    const makerId = tem.makerId;
+    const price = tem.price;
+    const buyer = await User.findOne({
+      where: { id: buyerId },
+      attributes: ["id", "point"],
+    });
+    const maker = await User.findOne({
+      where: { id: makerId },
+      attributes: ["id", "point"],
+    });
+    if (buyer.point < price) return next();
+
+    await PurchaseLog.create({ buyerId, temId });
+    // return {buyer, maker, price: tem.price}
+    User.update({ point: buyer.point - price }, { where: { id: buyerId } });
+    User.update({ point: maker.point + price }, { where: { id: makerId } });
+
+    res.json({ code: 0, newPoint: buyer.point - price });
+  };
+
+  findTargetTem()
+    .then(purchase)
+    .catch((err) => {
+      console.log(err);
+      res.json({ code: -1 });
+    });
+});
+
 module.exports = router;

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User, UserTemplate } = require("../models");
+const { User, UserTemplate, PurchaseLog } = require("../models");
 const jwt = require("jsonwebtoken");
 const { verifyToken } = require("./middlewares");
 const bcrypt = require("bcrypt");
@@ -93,66 +93,66 @@ router.post("/exitUser", async (req, res, next) => {
     });
 });
 
-router.post("/price", async (req, res, next) => {
-  buyUserId = req.body.id;
-  sellTemId = req.body.temid;
-  buyUserPoint = 0;
-  sellUserPoint = 0;
-  makerId = 0;
-  let cntBuy = 0;
+// router.post("/price", async (req, res, next) => {
+//   buyUserId = req.body.id;
+//   sellTemId = req.body.temid;
+//   buyUserPoint = 0;
+//   sellUserPoint = 0;
+//   makerId = 0;
+//   let cntBuy = 0;
 
-  await User.findOne({ where: { id: buyUserId }, attributes: ["point"] })
-    .then((data) => {
-      console.log(data.point);
-      buyUserPoint = data.point;
-    })
-    .catch((err) => {
-      console.log(err);
-      res.send({ code: -1, msg: "userid error" });
-    });
+//   await User.findOne({ where: { id: buyUserId }, attributes: ["point"] })
+//     .then((data) => {
+//       console.log(data.point);
+//       buyUserPoint = data.point;
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.send({ code: -1, msg: "userid error" });
+//     });
 
-  await UserTemplate.findOne({
-    where: { id: sellTemId },
-    attributes: ["price", "makerId", "cntBuy"],
-  })
-    .then((data) => {
-      cntBuy = data.cntBuy;
-      temprice = data.price;
-      makerId = data.makerId;
-    })
-    .catch((err) => {
-      console.log(err);
-      res.send({ code: -1, msg: "template id error" });
-    });
-  await User.findOne({
-    where: { id: makerId },
-    attributes: ["point"],
-  })
-    .then((data) => {
-      sellUserPoint = data.point;
-    })
-    .catch((err) => {
-      console.log(err);
-      res.send({ code: -1, msg: "maker id error" });
-    });
+//   await UserTemplate.findOne({
+//     where: { id: sellTemId },
+//     attributes: ["price", "makerId", "cntBuy"],
+//   })
+//     .then((data) => {
+//       cntBuy = data.cntBuy;
+//       temprice = data.price;
+//       makerId = data.makerId;
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.send({ code: -1, msg: "template id error" });
+//     });
+//   await User.findOne({
+//     where: { id: makerId },
+//     attributes: ["point"],
+//   })
+//     .then((data) => {
+//       sellUserPoint = data.point;
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.send({ code: -1, msg: "maker id error" });
+//     });
 
-  if (buyUserPoint >= temprice) {
-    resultUserpoint = buyUserPoint - temprice;
-    resultMakerpoint = sellUserPoint + temprice;
-    await User.update({ point: resultUserpoint }, { where: { id: buyUserId } });
-    await User.update({ point: resultMakerpoint }, { where: { id: makerId } });
-    await UserTemplate.update(
-      { cntBuy: cntBuy + 1 },
-      { where: { id: sellTemId } }
-    );
-    res.send({
-      code: 0,
-      newPoint: resultUserpoint,
-      msg: "결산이 대충 된것만 같습니다.",
-    });
-  } else {
-    res.send({ code: -1, msg: "point가 부족합니다." });
-  }
-});
+//   if (buyUserPoint >= temprice) {
+//     resultUserpoint = buyUserPoint - temprice;
+//     resultMakerpoint = sellUserPoint + temprice;
+//     await User.update({ point: resultUserpoint }, { where: { id: buyUserId } });
+//     await User.update({ point: resultMakerpoint }, { where: { id: makerId } });
+//     await UserTemplate.update(
+//       { cntBuy: cntBuy + 1 },
+//       { where: { id: sellTemId } }
+//     );
+//     res.send({
+//       code: 0,
+//       newPoint: resultUserpoint,
+//       msg: "purchase success",
+//     });
+//   } else {
+//     res.send({ code: -1, msg: "point가 부족합니다." });
+//   }
+// });
 
 module.exports = router;
