@@ -199,8 +199,8 @@ router.get("/resData", async (req, res, next) => {
 
 router.post("/purchase", async (req, res, next) => {
   const { buyerId, temId } = req.body;
+  console.log("## buyerId, temId ##", buyerId, temId);
 
-  let resData = {};
   const findTargetTem = () => {
     return Template.findOne({
       where: { id: temId },
@@ -209,6 +209,7 @@ router.post("/purchase", async (req, res, next) => {
   };
 
   const purchase = async (tem) => {
+    console.log("## tem ##", tem);
     const makerId = tem.makerId;
     const price = tem.price;
     const buyer = await User.findOne({
@@ -219,6 +220,7 @@ router.post("/purchase", async (req, res, next) => {
       where: { id: makerId },
       attributes: ["id", "point"],
     });
+    console.log("## buyer and maker ##", buyer, maker);
     if (buyer.point < price) return next();
 
     await PurchaseLog.create({ buyerId, temId });
