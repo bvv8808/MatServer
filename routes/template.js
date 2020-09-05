@@ -78,7 +78,7 @@ router.post("/deleteRegistedTem", (req, res, next) => {
 router.post("/deletePurchasedTem", (req, res, next) => {
   const { buyerId, temIds } = req.body;
 
-  Template.destroy({
+  PurchaseLog.destroy({
     where: {
       buyerId,
       temId: {
