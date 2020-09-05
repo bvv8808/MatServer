@@ -56,12 +56,41 @@ router.get("/getByUser", async (req, res, next) => {
     });
 });
 
-router.post("/delete", (req, res, next) => {
+router.post("/deleteRegistedTem", (req, res, next) => {
   //delete from template where makerID=?,fullData=?
-  console.log("tem.delete들어옴");
-  var temId = req.body.temId;
+  const { makerId, temIds } = req.body;
 
-  Template.destroy({ where: { id: temId } });
+  Template.destroy({
+    where: {
+      makerId,
+      id: {
+        [Op.in]: temIds,
+      },
+    },
+  })
+    .then(() => res.json({ code: 0 }))
+    .catch((err) => {
+      console.log(err);
+      res.json({ code: -1, msg: "Sequelize ERR" });
+    });
+});
+
+router.post("/deletePurchasedTem", (req, res, next) => {
+  const { buyerId, temIds } = req.body;
+
+  Template.destroy({
+    where: {
+      buyerId,
+      temId: {
+        [Op.in]: temIds,
+      },
+    },
+  })
+    .then(() => res.json({ code: 0 }))
+    .catch((err) => {
+      console.log(err);
+      res.json({ code: -1, msg: "Sequelize ERR" });
+    });
 });
 
 router.post("/makertem", async (req, res, next) => {

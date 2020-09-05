@@ -51,6 +51,8 @@ router.post("/signIn", (req, res, next) => {
           idOnServer: user.id,
           token,
           point: user.point,
+          name: user.name,
+          uid: user.userId,
         });
       } else {
         res.json({
