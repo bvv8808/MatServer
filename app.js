@@ -37,6 +37,7 @@ app.use("/user", require("./routes/user"));
 app.use("/pin", require("./routes/pin"));
 app.use("/tem", require("./routes/template"));
 app.use("/notice", require("./routes/notice"));
+app.use("/pointshop", require("./routes/pointshop"));
 app.use((req, res, next) => {
   const err = new Error("Not Found");
   err.status = 404;

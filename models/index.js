@@ -15,6 +15,7 @@ db.Pin = require("./pin")(sequelize, Sequelize);
 db.UserTemplate = require("./UserTemplate")(sequelize, Sequelize);
 db.Notice = require("./notice")(sequelize, Sequelize);
 db.PurchaseLog = require("./purchaseLog")(sequelize, Sequelize);
+db.PointshopItem = require("./pointshopItem")(sequelize, Sequelize);
 
 db.User.hasMany(db.UserTemplate, { foreignKey: "makerId", sourceKey: "id" });
 db.UserTemplate.belongsTo(db.User, { foreignKey: "makerId", targetKey: "id" });
