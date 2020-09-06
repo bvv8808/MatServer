@@ -8,7 +8,10 @@ const fillZero = (number) => {
 
 router.get("/getItems", (req, res, next) => {
   const { shopName } = req.query;
-  PointshopItem.findAll({ where: { shopName } })
+  PointshopItem.findAll({
+    where: { shopName },
+    order: [["neededPoint", "DESC"]],
+  })
     .then((items) => {
       const now = new Date();
       const year = now.getFullYear();
