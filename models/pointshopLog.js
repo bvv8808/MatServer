@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) =>
         allowNull: false,
       },
       shopName: {
-        type: DataType.SRING,
+        type: DataTypes.SRING,
         allowNull: false,
       },
       itemKey: {
-        type: DataType.SRING,
+        type: DataTypes.SRING,
         allowNull: false,
       },
     },
