@@ -10,7 +10,7 @@ router.get("/getItems", (req, res, next) => {
   const { shopName } = req.query;
   PointshopItem.findAll({
     where: { shopName },
-    order: [["neededPoint", "DESC"]],
+    order: [["neededPoint", "ASC"]],
   })
     .then((items) => {
       const now = new Date();
