@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) =>
   sequelize.define(
-    "purchaseLog",
+    "pointshopLog",
     {
       buyerId: {
         type: DataTypes.INTEGER(50),
