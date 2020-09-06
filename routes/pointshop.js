@@ -13,18 +13,6 @@ router.get("/getItems", (req, res, next) => {
     where: { shopName },
     order: [["neededPoint", "ASC"]],
   })
-    .then((items) => {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      const day = now.getDate();
-      const limitTime = `${year}.${fillZero(month)}.${fillZero(day)}`;
-
-      return items.map((item) => {
-        item.limitTime = limitTime;
-        return item;
-      });
-    })
     .then((resItems) => {
       res.json({ code: 0, resData: resItems });
     })
