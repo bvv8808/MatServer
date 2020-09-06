@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) =>
         allowNull: true,
       },
       itemName: {
-        type: DataType.SRING,
+        type: DataTypes.SRING,
         allowNull: false,
       },
       shopName: {
