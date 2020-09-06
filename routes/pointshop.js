@@ -39,16 +39,26 @@ router.post("/purchase", (req, res, next) => {
 
   User.update({ point: newPoint }, { where: { id: buyerId } })
     .then(() => {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const day = now.getDate();
+      const limitTime = `${year}.${fillZero(month)}.${fillZero(day)}`;
+
       const key = uuidv4();
       PointshopLog.create({
         buyerId,
         itemName,
         shopName,
         itemKey: key,
+        limitTime,
       });
-      return key;
+      return { key, limitTime };
     })
-    .then((key) => res.json({ code: 0, key }))
+    .then((resObj) => {
+      resObj.code = 0;
+      res.json(resObj);
+    })
     .catch((err) => res.json({ code: -1 }));
 });
 // ???
