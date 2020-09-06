@@ -1,5 +1,6 @@
 const router = require("express").Router();
-const { PointshopItem } = require("../models");
+const { PointshopItem, PointshopLog, User } = require("../models");
+const { v4: uuidv4 } = require("uuid");
 
 const fillZero = (number) => {
   const strNumber = String(number);
@@ -31,6 +32,24 @@ router.get("/getItems", (req, res, next) => {
       console.log(err);
       res.json({ code: -1, msg: err });
     });
+});
+
+router.post("/purchase", (req, res, next) => {
+  const { itemName, shopName, buyerId, newPoint } = req.body;
+
+  User.update({ point: newPoint }, { where: { id: buyerId } })
+    .then(() => {
+      const key = uuidv4();
+      PointshopLog.create({
+        buyerId,
+        itemName,
+        shopName,
+        itemKey: key,
+      });
+      return key;
+    })
+    .then((key) => res.json({ code: 0, key }))
+    .catch((err) => res.json({ code: -1 }));
 });
 
 module.exports = router;
