@@ -241,8 +241,9 @@ router.post("/purchase", async (req, res, next) => {
 
   const purchase = async (tem) => {
     console.log("## tem ##", tem);
-    const makerId = tem.makerId;
-    const price = tem.price;
+
+    const { makerId, price, cntBuy } = tem;
+
     const buyer = await User.findOne({
       where: { id: buyerId },
       attributes: ["id", "point"],
@@ -258,6 +259,7 @@ router.post("/purchase", async (req, res, next) => {
     // return {buyer, maker, price: tem.price}
     User.update({ point: buyer.point - price }, { where: { id: buyerId } });
     User.update({ point: maker.point + price }, { where: { id: makerId } });
+    Template.update({ cntBuy: cntBuy + 1 }, { where: { id: tem.id } });
 
     res.json({ code: 0, newPoint: buyer.point - price });
   };
