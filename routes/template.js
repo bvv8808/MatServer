@@ -193,16 +193,18 @@ router.get("/resData", async (req, res, next) => {
         order = [["cntBuy", "DESC"]];
         break;
       case "최고가":
-        order = [["Price", "DESC"]];
+        order = [["price", "DESC"]];
         break;
       case "최저가":
-        order = [["Price", "ASC"]];
+        order = [["price", "ASC"]];
         break;
     }
-  } else if (categoryName) {
+  }
+  if (categoryName) {
     where.category = categoryName;
   }
 
+  console.log("# where #", where);
   await Template.findAll({
     //paging data
     offset: offset,
